@@ -10,7 +10,8 @@ export default new Vuex.Store({
     sheet: [],
     tags: [],
     keyword: '',
-    matrixStat: []
+    matrixStat: [],
+    interval: 60
   },
   mutations: {
     init (state, payload) {
@@ -18,13 +19,11 @@ export default new Vuex.Store({
     },
     set (state, payload) {
       state[payload.field] = payload.data
-      console.log('state change!', payload.field)
     }
   },
   actions: {
     async init ({commit}) {
       await Vue.axios.get('http://localhost:1111/data').then(res => {
-        console.log('hello raw function')
         let payload = {
           'field': 'sheet',
           'data': res.data

@@ -5,7 +5,7 @@
    <el-tab-pane label="Unit">
      <!-- <div style="overflow: scroll;"> -->
      <div>
-       <svg id="timeLine" width="1000" height="200">
+       <svg id="timeLine" width="1000" height="300">
        </svg>
            <!-- <p id="textDetail" style="width: 80vh; text-align: left;">text detail</p> -->
            <p id="textDetail">
@@ -37,7 +37,8 @@ export default {
     ...mapState([
       'detail',
       'sheet',
-      'matrixStat'
+      'matrixStat',
+      'interval'
     ])
   },
   mounted: function () {
@@ -51,10 +52,10 @@ export default {
   watch: {
     detail (sheet) {
       // temportary
-      this.timeLine.drawTimeline(sheet)
+      this.timeLine.drawTimeline(sheet, this.interval)
     },
     matrixStat (matrix) {
-      this.timeLine.drawMatrix(matrix)
+      this.timeLine.drawMatrix(matrix, this.interval)
     }
   }
 }

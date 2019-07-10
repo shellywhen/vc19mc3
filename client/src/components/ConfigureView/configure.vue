@@ -187,6 +187,7 @@ export default {
   },
   methods: {
     async onSubmit () {
+      this.$store.commit('set', {'field': 'interval', 'data': this.form.aggregation})
       let form = this.form.topic
       await this.axios.post('http://localhost:1111/data_request', {
         'configure': this.form
