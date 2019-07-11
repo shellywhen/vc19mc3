@@ -1,9 +1,10 @@
 /* global d3 */
-let Timeline = function () {
+let Timeline = function (component) {
   this.zone = ''
   this.start = ''
   this.end = ''
   this.interval = ''
+  this.component = component
 }
 Timeline.prototype.draw = function () {
   d3.math.max([1, 2])
@@ -31,8 +32,8 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
   const xLabel = 'Time'
   const yValue = d => d.re
   const yLabel = 'Post'
-  const margin = { left: 20, right: 10, top: 80, bottom: 50 }
-  const margin2 = { left: 20, right: 10, top: 10, bottom: 250 }
+  const margin = { left: 30, right: 10, top: 60, bottom: 20 }
+  const margin2 = { left: 30, right: 10, top: 10, bottom: 240 }
 
   const svg = d3.select('#timeLine')
   const width = svg.attr('width')
@@ -49,12 +50,11 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
     .attr('class', 'context')
     .attr('transform', 'translate(' + margin2.left + ',' + margin2.top + ')')
 
-  // const g = svg.append('g')
-  //   .attr('transform', `translate(${margin.left},${margin.top})`)
-
   const xScale = d3.scaleTime().domain(d3.extent(sheet, xValue)).range([0, innerWidth])
   const xScale2 = d3.scaleTime().domain(xScale.domain()).range([0, innerWidth])
   let timeRange = xScale.domain()
+  this.start = timeRange[0]
+  this.end = timeRange[1]
   let thresh = timeRange[0]
   let thresholds = []
   while (thresh < timeRange[1]) {
@@ -97,6 +97,7 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
     .attr('x', -15)
     .attr('y', -20)
 
+  let timeline = this
   let brushed = function () {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return // ignore brush-by-zoom
     var s = d3.event.selection || xScale2.range()
@@ -108,6 +109,7 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
     focus.selectAll('circle').attr('cx', d => xScale(xValue(d)))
     svg.selectAll('.tick').select('line').attr('opacity', 0.2)
     svg.selectAll('.domain').remove()
+    timeline.component.$store.commit('set', {'field': 'period', 'data': xScale.domain()})
   }
 
   let brush = d3.brushX()
@@ -203,7 +205,7 @@ Timeline.prototype.drawMatrix = function (data, interval = 15) {
   }
   let idList = [...Array(idx).keys()].map(d => String(d + 1))
   d3.select('#matrix').html('')
-  const margin = { left: 180, right: 20, top: 10, bottom: 20 }
+  const margin = { left: 180, right: 20, top: 10, bottom: 0 }
   const svg = d3.select('#matrix')
   const width = svg.attr('width')
   const height = svg.attr('height')
@@ -222,14 +224,15 @@ Timeline.prototype.drawMatrix = function (data, interval = 15) {
     .range([0, innerWidth])
     .domain(idList)
     .padding(0.05)
-  svg.append('g')
-    .style('font-size', 15)
-    .attr('transform', 'translate(' + margin.left + ',' + innerHeight + ')')
-    .call(d3.axisBottom(x).tickValues(x.domain().filter((d, i) => (i % 10) === 9)))
-    .select('.domain').remove()
+  // svg.append('g')
+  //   .style('font-size', 15)
+  //   .attr('transform', 'translate(' + margin.left + ',' + innerHeight + ')')
+  //   .call(d3.axisBottom(x).tickValues(x.domain().filter((d, i) => (i % 10) === 9)))
+  //   .select('.domain').remove()
 
   svg.selectAll('.tick').select('line').remove()
   let mycolor = d3.scaleSequential().interpolator(d3.interpolateBlues).domain([1, vmax])
+  let self = this
   svg.append('g').selectAll()
     .data(datum, d => d)
     .enter()
@@ -241,6 +244,14 @@ Timeline.prototype.drawMatrix = function (data, interval = 15) {
     .attr('ry', 4)
     .attr('width', x.bandwidth())
     .attr('height', y.bandwidth())
+    .on('mouseover', function (d) {
+      let start = new Date(self.start)
+      let timestart = new Date(start.setTime(start.getTime() + d.index * (interval - 1) * 60 * 1000))
+      let timeend = new Date(start.setTime(start.getTime() + interval * 60 * 1000))
+      let startstr = timestart.getMonth() + '/' + (timestart.getDate() + 1) + ' ' + timestart.getHours() + ':' + timestart.getMinutes()
+      let endstr = timeend.getHours() + ':' + timeend.getMinutes()
+      d3.select('#valueDetail').text(d.value + ' messages, ' + startstr + '~' + endstr)
+    })
     .style('fill', d => mycolor(d.value))
     .style('stroke-width', 4)
     .style('stroke', 'none')

@@ -1,6 +1,6 @@
 <template>
 <p>
-text cloud, comparison
+text cloud, comparison {{this.period}}
 </p>
 </template>
 <script>
@@ -16,8 +16,14 @@ export default {
   computed: {
     ...mapState({
       detail: state => state.detail,
-      sheet: state => state.sheet
+      sheet: state => state.sheet,
+      period: state => state.period
     })
+  },
+  watch: {
+    period: function () {
+      console.log(this.period)
+    }
   },
   mounted: function () {
   },

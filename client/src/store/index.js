@@ -11,7 +11,8 @@ export default new Vuex.Store({
     tags: [],
     keyword: '',
     matrixStat: [],
-    interval: 60
+    interval: 60,
+    period: [0, 0]
   },
   mutations: {
     init (state, payload) {

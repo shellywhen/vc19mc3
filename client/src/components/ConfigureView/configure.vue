@@ -194,7 +194,7 @@ export default {
       }).then(res => {
         console.log(res.data)
         this.$store.commit('set', {'field': 'detail', 'data': res.data.data})
-        this.$store.commit('set', {field: 'matrixStat', 'data': res.data.stat})
+        this.$store.commit('set', {'field': 'matrixStat', 'data': res.data.stat})
         this.form.topic = form
       })
     },

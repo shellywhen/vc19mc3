@@ -5,7 +5,7 @@
    <el-tab-pane label="Unit">
      <!-- <div style="overflow: scroll;"> -->
      <div>
-       <svg id="timeLine" width="1000" height="300">
+       <svg id="timeLine" width="1000" height="280">
        </svg>
            <!-- <p id="textDetail" style="width: 80vh; text-align: left;">text detail</p> -->
            <p id="textDetail">
@@ -14,8 +14,11 @@
      </div>
    </el-tab-pane>
    <el-tab-pane label="Matrix">
-     <svg id="matrix" width="1000" height="200">
+     <svg id="matrix" width="1000" height="280">
      </svg>
+     <p id="valueDetail">
+       Value
+     </p>
    </el-tab-pane>
  </el-tabs>
 
@@ -31,6 +34,7 @@ export default {
   name: 'timelineView',
   data () {
     return {
+      period: ['fuck', 'vue']
     }
   },
   computed: {
@@ -42,7 +46,7 @@ export default {
     ])
   },
   mounted: function () {
-    this.timeLine = new Timeline()
+    this.timeLine = new Timeline(this)
   },
   methods: {
     handleClick (tab, event) {
