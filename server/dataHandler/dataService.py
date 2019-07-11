@@ -12,7 +12,6 @@ class DataService(object):
              return []
         corpus = self.data.copy()
         corpus = corpus[corpus.apply(lambda x: keyword.lower() in str(x['message']).lower(), axis=1)]
-        # corpus[corpus['message'].notnull()&corpus['message'].str.contains(keyword)].to_dict('records')
         return corpus.to_dict('records')
 
     def getAll(self):
@@ -27,13 +26,13 @@ class DataService(object):
         filter = conf['filter']
         overview = conf['overview']
         topic = conf['topic']
-        if overview == True:
-            return {'data': self.getAll(), 'stat': getStat(self.data, loc, aggr)}
         if filter == True:
             corpus = self.data[self.data.apply(lambda x: str(x['message'])[0:4]!='re: ', axis=1)].copy()
         else:
             corpus = self.data.copy()
         corpus = corpus[corpus['location'].isin(loc)]
+        if overview == True:
+            return {'data': corpus.to_dict('records'), 'stat': getStat(corpus, loc, aggr)}
         corpus = corpus[corpus.apply(lambda x: judge(x['message'], topic), axis=1)]
         data = corpus.to_dict('records')
         stat = getStat(corpus, loc, aggr)
