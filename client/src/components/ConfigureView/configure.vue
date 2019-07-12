@@ -212,7 +212,10 @@ export default {
       await this.axios.post('http://localhost:1111/data_request', {
         'configure': this.form
       }).then(res => {
-        // console.log('receive data from data_request', res)
+        console.log('receive data from data_request', typeof res.data)
+        if (res.data.constructor === String) {
+          res.data = JSON.parse(res.data)
+        }
         this.$store.commit('set', {'field': 'detail', 'data': res.data.data})
         this.$store.commit('set', {'field': 'matrixStat', 'data': res.data.stat})
         this.form.topic = form

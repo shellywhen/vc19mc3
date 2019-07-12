@@ -31,7 +31,9 @@ class DataService(object):
             corpus = self.data[self.data.apply(lambda x: str(x['message'])[0:4]!='re: ', axis=1)].copy()
         else:
             corpus = self.data.copy()
-        corpus = corpus[corpus['location'].isin(loc)]
+        if len(loc) != 21:
+            print('search space')
+            corpus = corpus[corpus['location'].isin(loc)]
         if overview == True:
             self.detail = corpus
             return {'data': corpus.to_dict('records'), 'stat': getStat(corpus, loc, aggr)}

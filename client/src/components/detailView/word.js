@@ -30,7 +30,7 @@ Word.prototype.drawCloud = function (countList) {
   let layout = cloud()
     .size([width, height])
     .words(this.countList)
-    .fontSize(d => Math.sqrt(d.count) * 10 + 10)
+    .fontSize(d => Math.sqrt(d.count) * 5 + 10)
     .padding(10)
     .rotate(d => 0)
     .spiral('rectangular')
@@ -41,13 +41,11 @@ Word.prototype.drawCloud = function (countList) {
     .data(this.countList, d => d)
     .enter()
     .append('text')
-    .style('font-size', d => Math.sqrt(d.count) * 10 + 10)
+    .style('font-size', d => Math.sqrt(d.count) * 5 + 10)
     .style('fill', '#44a8e0')
     .attr('text-anchor', 'middle')
-    .style('font-family', 'Impact')
+    .style('font-family', 'sans-serif')
     .attr('transform', d => 'translate(' + [d.x, d.y] + ')')
     .text(d => d.word)
-
-  console.log(this.countList)
 }
 export default Word

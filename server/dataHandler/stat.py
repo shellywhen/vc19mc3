@@ -48,7 +48,7 @@ def getWord(corpus):
         stopWords.add(w)
     filtered = [w for w in doc if not w in stopWords]
     print(filtered)
-    count = Counter(filtered).most_common(300)
+    count = Counter(filtered).most_common(50)
     print(count)
     result = [{'word': x[0], 'count': x[1]} for x in count]
     return result

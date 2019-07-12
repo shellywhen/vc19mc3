@@ -26,7 +26,7 @@ def keyword(key):
 @app.route('/data_request',  methods=['POST'])
 def data_request():
     form = request.get_json()['configure']
-    print(form, request.get_json())
+    print(form)
     data = ds.getData(form)
     return simplejson.dumps(data, ignore_nan=False)
 
