@@ -1,12 +1,21 @@
 <template>
-<p>
-text cloud, comparison {{this.period}}
+  <div>
+<p id="timePeriod">
 </p>
+<el-row>
+  <el-col :span="24">
+    <svg id="wordView" height="350" width="800">
+    </svg>
+  </el-col>
+</el-row>
+</div>
 </template>
+
 <script>
 import {
   mapState
 } from 'vuex'
+import Word from './word.js'
 export default {
   name: 'detailView',
   data () {
@@ -16,16 +25,20 @@ export default {
   computed: {
     ...mapState({
       detail: state => state.detail,
-      sheet: state => state.sheet,
-      period: state => state.period
+      period: state => state.period,
+      wordCount: state => state.wordCount
     })
   },
   watch: {
-    period: function () {
-      console.log(this.period)
+    period: function (per) {
+      this.wordView.updatePeriod(per)
+    },
+    wordCount: function () {
+      this.wordView.drawCloud(this.wordCount)
     }
   },
   mounted: function () {
+    this.wordView = new Word()
   },
   methods: {
   }

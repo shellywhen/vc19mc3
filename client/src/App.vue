@@ -63,7 +63,6 @@ export default {
   },
   methods: {
     handleSelect (key, keyPath) {
-      console.log(key, keyPath)
     }
   },
   created () {
@@ -93,11 +92,11 @@ body::-webkit-scrollbar-thumb {
 }
 
 #detailView {
-  height: 60vh;
+  height: 45vh;
   width: 100%;
 }
 #timelineView {
-  height: 40vh;
+  height: 55vh;
   width: 100%;
 }
 #leftWrapper {

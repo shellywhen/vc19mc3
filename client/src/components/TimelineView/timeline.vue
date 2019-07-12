@@ -75,4 +75,7 @@ export default {
 p {
   margin: 0;
 }
+.circleHighlight {
+  stoke: 4px;
+}
 </style>

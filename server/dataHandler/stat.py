@@ -1,7 +1,7 @@
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
-from sklearn.feature_extraction.text import TfidfVectorizer
+# from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem.porter import PorterStemmer
 from gensim.utils import simple_preprocess
 from collections import Counter
@@ -32,4 +32,23 @@ def getStat(corpus, locations, aggr):
         tmp = corpus[corpus['location']==loc]
         counts = [len(tmp[(tmp['time']>=t['start']) & (tmp['time']<t['end'])].index) for t in time_info]
         result.append({'location': loc, 'count': counts})
+    return result
+
+def getWord(corpus):
+    msglist = corpus['message'].tolist()
+    doc = ''
+    for text in msglist:
+        doc += str(text).lower()
+    doc = doc.translate(str.maketrans('', '', string.punctuation))
+    doc = simple_preprocess(str(doc))
+    # document = ' '.join(word for word in doc)
+    stopWords = set(stopwords.words('english'))
+    common = ['well', 'want', 'also', 'could', 'even', 'really', 'anyone', 'someone', 'anything', 'something', 'stay', 'get', 'one', 'people', 'go', 'got', 'make', 'us', 'nice', 'still', 'right']
+    for w in common:
+        stopWords.add(w)
+    filtered = [w for w in doc if not w in stopWords]
+    print(filtered)
+    count = Counter(filtered).most_common(300)
+    print(count)
+    result = [{'word': x[0], 'count': x[1]} for x in count]
     return result

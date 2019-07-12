@@ -53,9 +53,9 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
   const xScale = d3.scaleTime().domain(d3.extent(sheet, xValue)).range([0, innerWidth])
   const xScale2 = d3.scaleTime().domain(xScale.domain()).range([0, innerWidth])
   let timeRange = xScale.domain()
-  this.start = timeRange[0]
-  this.end = timeRange[1]
-  let thresh = timeRange[0]
+  this.start = new Date(timeRange[0])
+  this.end = new Date(timeRange[1])
+  let thresh = new Date(timeRange[0])
   let thresholds = []
   while (thresh < timeRange[1]) {
     thresh.setTime(thresh.getTime() + interval * 60 * 1000)
@@ -127,8 +127,10 @@ Timeline.prototype.drawTimeline = function (sheet, interval = 60) {
     .attr('r', d => Math.log(3 * d.re + 80))
     .on('mouseover', function (d) {
       d3.select('#textDetail').text(d.message + ' (' + d.account + ', ' + d.location + ')')
+      d3.select(this).style('stroke', 'black')
     })
     .on('mouseout', function (d) {
+      d3.select(this).style('stroke', null)
     })
   context.selectAll('rect')
     .data(bins)
@@ -246,9 +248,9 @@ Timeline.prototype.drawMatrix = function (data, interval = 15) {
     .attr('height', y.bandwidth())
     .on('mouseover', function (d) {
       let start = new Date(self.start)
-      let timestart = new Date(start.setTime(start.getTime() + d.index * (interval - 1) * 60 * 1000))
+      let timestart = new Date(start.setTime(start.getTime() + (d.index - 1) * interval * 60 * 1000))
       let timeend = new Date(start.setTime(start.getTime() + interval * 60 * 1000))
-      let startstr = timestart.getMonth() + '/' + (timestart.getDate() + 1) + ' ' + timestart.getHours() + ':' + timestart.getMinutes()
+      let startstr = timestart.getMonth() + 1 + '/' + (timestart.getDate()) + ' ' + timestart.getHours() + ':' + timestart.getMinutes()
       let endstr = timeend.getHours() + ':' + timeend.getMinutes()
       d3.select('#valueDetail').text(d.value + ' messages, ' + startstr + '~' + endstr)
     })

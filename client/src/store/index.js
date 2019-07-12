@@ -12,7 +12,8 @@ export default new Vuex.Store({
     keyword: '',
     matrixStat: [],
     interval: 60,
-    period: [0, 0]
+    period: [0, 0],
+    wordCount: []
   },
   mutations: {
     init (state, payload) {
@@ -24,13 +25,13 @@ export default new Vuex.Store({
   },
   actions: {
     async init ({commit}) {
-      await Vue.axios.get('http://localhost:1111/data').then(res => {
-        let payload = {
-          'field': 'sheet',
-          'data': res.data
-        }
-        commit('init', payload)
-      })
+      // await Vue.axios.get('http://localhost:1111/data').then(res => {
+      //   let payload = {
+      //     'field': 'sheet',
+      //     'data': res.data
+      //   }
+      //   commit('init', payload)
+      // })
     }
   }
 })

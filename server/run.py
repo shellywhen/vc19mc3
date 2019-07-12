@@ -28,7 +28,13 @@ def data_request():
     form = request.get_json()['configure']
     print(form, request.get_json())
     data = ds.getData(form)
-    print('data', len(data['data']), len(data['stat']))
+    return simplejson.dumps(data, ignore_nan=False)
+
+@app.route('/word_request', methods=['POST'])
+def word_request():
+    form = request.get_json()['configure']
+    period = request.get_json()['period']
+    data = ds.getCount(period)
     return simplejson.dumps(data, ignore_nan=False)
 
 app.run(host='0.0.0.0', port=1111, use_reloader=False, debug=True)

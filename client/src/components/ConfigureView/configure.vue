@@ -68,6 +68,13 @@
     </el-row>
     <el-form :inline="true" class="demo-form-inline" size="mini">
       <el-form-item size="mini">
+          <el-switch
+          v-model="mode"
+          active-text="Quick"
+          inactive-text="">
+          </el-switch>
+      </el-form-item>
+      <el-form-item size="mini">
         <el-button type="primary" @click="onSubmit">Check</el-button>
       </el-form-item>
     </el-form>
@@ -79,6 +86,7 @@ export default {
   name: 'configureView',
   data () {
     return {
+      mode: true,
       selection: {
         aggregation: {
           range: [15, 360],
@@ -179,11 +187,23 @@ export default {
   computed: {
     ...mapState({
       detail: state => state.detail,
-      sheet: state => state.sheet
+      sheet: state => state.sheet,
+      period: state => state.period
     })
   },
   mounted: function () {
 
+  },
+  watch: {
+    period: async function () {
+      if (this.mode === true) return
+      await this.axios.post('http://localhost:1111/word_request', {
+        'configure': this.form,
+        'period': this.period
+      }).then(res => {
+        this.$store.commit('set', {'field': 'wordCount', 'data': res.data})
+      })
+    }
   },
   methods: {
     async onSubmit () {
@@ -192,7 +212,7 @@ export default {
       await this.axios.post('http://localhost:1111/data_request', {
         'configure': this.form
       }).then(res => {
-        console.log(res.data)
+        // console.log('receive data from data_request', res)
         this.$store.commit('set', {'field': 'detail', 'data': res.data.data})
         this.$store.commit('set', {'field': 'matrixStat', 'data': res.data.stat})
         this.form.topic = form
